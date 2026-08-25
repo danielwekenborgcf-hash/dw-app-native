@@ -1,0 +1,15 @@
+{
+  "appId": "de.dwpersonaltrainer.app",
+  "appName": "DW Personal Trainer",
+  "webDir": "www",
+  "server": {
+    "url": "https://app.dw-personal-trainer.de",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "automatic"
+  }
+}

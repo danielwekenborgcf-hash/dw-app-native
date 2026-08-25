@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DW Personal Trainer</string>
+    <string name="title_activity_main">DW Personal Trainer</string>
+    <string name="package_name">de.dwpersonaltrainer.app</string>
+    <string name="custom_url_scheme">de.dwpersonaltrainer.app</string>
+</resources>
