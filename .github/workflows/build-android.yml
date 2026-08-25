@@ -27,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install npm dependencies
         run: npm ci
@@ -35,6 +35,11 @@ jobs:
       - name: Sync Capacitor (Android)
         run: npx cap sync android
 
+      # If you've added a GOOGLE_SERVICES_JSON repository secret (base64-encoded
+      # contents of your real Firebase google-services.json), this overwrites the
+      # placeholder file with your real config so push notifications work in the
+      # built APK. Without the secret, the build still succeeds using the
+      # checked-in placeholder (push notifications just won't be functional).
       - name: Inject real google-services.json (if configured)
         if: ${{ env.GOOGLE_SERVICES_JSON_B64 != '' }}
         env:
