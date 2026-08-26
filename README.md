@@ -10,6 +10,7 @@ Capacitor wrapper that loads the live web app (`https://app.dw-personal-trainer.
 - App icons/splash were generated from `assets/capacitor-icon*.png` and `assets/capacitor-splash-2732.png` using `@capacitor/assets`.
 - `@capacitor/push-notifications` is installed and wired up on Android (permission declared, Google Services Gradle plugin auto-applies once a real `google-services.json` is present). See `PUSH_SETUP.md` for the remaining Firebase setup + the JS snippet needed in the web app to register for push.
 - `.github/workflows/build-android.yml` builds an installable debug APK automatically on every push — see below.
+- `.github/workflows/build-ios.yml` builds an unsigned iOS `.ipa` on demand (manual trigger) — see "Installing on your phone without a Mac (iOS)" below.
 
 ## Installing on your phone without an app store (Android)
 
@@ -23,6 +24,12 @@ This project includes a GitHub Actions workflow (`.github/workflows/build-androi
 No Apple Developer account, no Play Console account, no keystore needed for this path — the debug build is self-signed automatically by Gradle.
 
 See `PUSH_SETUP.md` for wiring up real push notifications (a free Firebase project is required for that part).
+
+## Installing on your phone without a Mac (iOS)
+
+This project also includes a manually-triggered GitHub Actions workflow (`.github/workflows/build-ios.yml`) that builds an unsigned `.ipa` in the cloud on a macOS runner — no Mac purchase and no paid Apple Developer account needed to build it. You then sign and install it onto your own iPhone from Windows using a free tool (Sideloadly or AltStore) and your regular, free Apple ID. Full step-by-step instructions (German) are in `IOS_SIDELOAD.md`.
+
+Unlike the Android workflow, this one does not run automatically on every push (macOS build minutes are more expensive) — trigger it manually from the "Actions" tab whenever you want a new iOS build.
 
 ## Building manually instead
 
