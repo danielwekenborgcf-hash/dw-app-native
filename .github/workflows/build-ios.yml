@@ -1,0 +1,63 @@
+name: Build iOS App (unsigned IPA)
+
+# Builds an unsigned .ipa you can sideload onto your own iPhone with
+# Sideloadly or AltStore, using nothing but your free Apple ID - no Mac
+# and no paid Apple Developer account needed for this step.
+#
+# macOS build minutes cost more than Linux ones, so this only runs when
+# you trigger it yourself: go to the "Actions" tab -> "Build iOS App
+# (unsigned IPA)" -> "Run workflow".
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Sync Capacitor (iOS)
+        run: npx cap sync ios
+
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project ios/App/App.xcodeproj \
+            -scheme App
+
+      - name: Build unsigned .app (no signing, no Apple account needed)
+        run: |
+          xcodebuild build \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            PROVISIONING_PROFILE_SPECIFIER=""
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -r "build/Build/Products/Release-iphoneos/App.app" Payload/
+          zip -r dw-personal-trainer-unsigned.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: dw-personal-trainer-unsigned-ipa
+          path: dw-personal-trainer-unsigned.ipa
+          if-no-files-found: error
